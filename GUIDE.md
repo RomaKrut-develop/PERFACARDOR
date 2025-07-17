@@ -294,3 +294,5 @@ After that, enter program name to run, example: `test.txt`.
 Press ENTER pn keyboard.
 
 Your 'digital punch card' will be loaded into the interpreter from the `tray`, and the execution result will be displayed in the terminal.
+
+##Creator - Roman Braginetz
