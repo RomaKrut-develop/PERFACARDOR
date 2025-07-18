@@ -5,27 +5,34 @@
 #ifndef INTERPRETER_H
 #define INTERPRETER_H
 
-#include <iostream>
-#include <fstream> // Работа с файлами
-#include <sstream>
-#include <map> // Контейнеры 
-#include <vector> // Контейнеры 
-#include <string> // Строковвые операции
-#include <cctype> // Потоковые
-#include <stdexcept> // Обработка исключений
+#include <map>
+#include <string>
 
-class Interpreter { // Основной класс интерпретатора 
-private: 
+class Interpreter {
+private:
     std::map<std::string, int> variables;
     bool inProgram = false;
 
-    void executeLine(const std::string& line);
+    // Условные блоки
+    bool inIfBlock = false;
+    bool executeElse = false;
+    bool conditionMet = true;
+
+    // Убирает лишние пробелы
     std::string trim(const std::string& s);
-    std::vector<std::string> tokenize(const std::string& line);
+
+    // Вычисляет выражение
     int evaluateExpression(const std::string& expr);
 
+    // Сравнивает значения по оператору
+    bool evaluateCondition(int a, int b, const std::string& op);
+
+    // Выполняет одну строку
+    void executeLine(const std::string& line);
+
 public:
+    // Запуск интерпретатора из файла
     void run(const std::string& filename);
 };
 
-#endif
+#endif // INTERPRETER_H

@@ -2,8 +2,8 @@
 
 All notable changes to this project will be documented in this file.
 
-## [0.1.0] - 2025-07-17
 ## EN
+## [0.1.0] - 2025-07-17
 ### Added
 - Initial interpreter implementation with basic syntax support
 - Support for `START` and `END` program markers
@@ -33,8 +33,23 @@ All notable changes to this project will be documented in this file.
 ### Removed
 - Old syntax `CALC(...) = VAR` in favor of `CALC(VAR=...)`
 
-## [0.1.0] - 2025-07-17
+## [0.1.1] - 2025-07-18
+
+### Added
+- `IF/ELSE` constructions
+- Comparison operators: `==`, `!=`, `<=`, `=>`, `<`, `>`
+
+### Changed
+- Variables can be defined not in `CALC()` function
+
+### Fixed
+- Improve fixes
+
+### Removed
+- Old syntax `CREATE VAR TEST` in favor of `VAR TEST = 10`
+
 ## RU
+## [0.1.0] - 2025-07-17
 ### Добавлено
 - Интерпретатор цифровых перфокарт
 - `START` и `END` как объявление и закрытие программ
@@ -63,3 +78,18 @@ All notable changes to this project will be documented in this file.
 
 ### Removed
 - Старый синтаксис `CALC(...) = VAR` взамену `CALC(VAR=...)`
+
+## [0.1.1] - 2025-07-18
+
+### Добавленр
+- Условные конструкции `IF/ELSE`
+- Операторы сравнения: `==`, `!=`, `<=`, `=>`, `<`, `>`
+
+### Изменено
+- Переменные могут быть объявлены независимо от функции `CALC()`
+
+### Исправлено
+- Незначительные ошибки
+
+### Удалено
+- Старый синтаксис `CREATE VAR TEST` был изменён на `VAR TEST = 10`

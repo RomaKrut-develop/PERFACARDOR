@@ -1,4 +1,5 @@
 #include <iostream>
+#include <fcntl.h>
 #include <fstream>
 #include <string>
 #include <limits>
@@ -14,10 +15,10 @@ void clearInput() {
 
 int main() { // Основная функция меню (Меню в роле посредника интерпритатора и загрузчика программ )
     SetConsoleOutputCP(CP_UTF8);
-    SetConsoleCP(CP_UTF8);
+    SetConsoleCP(CP_UTF8); // Для корректной работы киррилицы
     std::setlocale(LC_ALL, "Russian"); // Выставляем русский язык (КОТОРОГО ПОКА НЕТ)
 
-    std::wcout << L"\n------------PERFACARDOR 1.0------------\n";
+    std::wcout << L"\n------------PERFACARDOR 1.1------------\n";
     while (true) { // Основной цикл меню
         std::wcout << L"\n------MAIN MENU------:\n";
         std::wcout << L"\nInput command:\n";
@@ -50,7 +51,7 @@ int main() { // Основная функция меню (Меню в роле �
         else if (choice == 2) {
             std::wcout << L"\n------PROGRAM HELP------:\n";
             std::wcout << L"\nTo prepare your .txt program for load, put it in 'tray' folder.\n";
-            std::wcout << L"\nTo run program, enter '1' at the main menu prompt. Following this, specify the file name for execution. The program will load and run itself..\n";
+            std::wcout << L"\nTo run program, enter '1' at the main menu. Following this, specify the file name for execution. The program will load and run itself..\n";
             std::wcout << L"\nFor more, read 'GUIDE.md'\n";
         }
         else if (choice == 3) {

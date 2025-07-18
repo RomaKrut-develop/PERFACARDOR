@@ -2,6 +2,7 @@
 #include <iostream>
 #include <sstream>
 #include <cctype>
+#include <fstream>
 #include <stdexcept>
 
 // Убирает лишние пробелы по краям
@@ -13,7 +14,7 @@ std::string Interpreter::trim(const std::string& s) {
     return s.substr(first, last - first + 1);
 }
 
-// Разбирает выражение на деление, умножение, вычитание, сложение
+// Разбирает выражение вида "1+2", "5*3", "10/2", "7-4"
 int Interpreter::evaluateExpression(const std::string& expr) {
     std::istringstream iss(expr);
     int a, b;
@@ -36,6 +37,17 @@ int Interpreter::evaluateExpression(const std::string& expr) {
     }
 }
 
+// Сравнивает значения по оператору
+bool Interpreter::evaluateCondition(int a, int b, const std::string& op) {
+    if (op == "==") return a == b;
+    if (op == "!=") return a != b;
+    if (op == ">")  return a > b;
+    if (op == "<")  return a < b;
+    if (op == ">=") return a >= b;
+    if (op == "<=") return a <= b;
+    throw std::runtime_error("IF: unsupported operator '" + op + "'");
+}
+
 // Выполняет одну строку программы
 void Interpreter::executeLine(const std::string& line) {
     std::string trimmed = trim(line);
@@ -56,7 +68,10 @@ void Interpreter::executeLine(const std::string& line) {
     else if (!inProgram) {
         throw std::runtime_error("Error: command out of 'START...END' range");
     }
+
     else if (trimmed.substr(0, 5) == "SHOW(") {
+        if (!conditionMet) return;
+
         std::string content = trim(trimmed.substr(5, trimmed.size() - 6));
         if (content.front() == '\'' && content.back() == '\'') {
             std::cout << content.substr(1, content.size() - 2) << std::endl;
@@ -69,22 +84,50 @@ void Interpreter::executeLine(const std::string& line) {
             std::cout << it->second << std::endl;
         }
     }
-    else if (trimmed.substr(0, 11) == "CREATE VAR ") {
-        std::string varName = trim(trimmed.substr(11));
+
+    else if (trimmed.substr(0, 4) == "VAR ") {
+        size_t equalsPos = trimmed.find(" = ");
+        if (equalsPos == std::string::npos) {
+            throw std::runtime_error("VAR: missing ' = ' in declaration");
+        }
+
+        std::string varName = trim(trimmed.substr(4, equalsPos - 4));
+        std::string valueStr = trim(trimmed.substr(equalsPos + 3));
+
         if (varName.empty()) {
-            throw std::runtime_error("CREATE VAR: name don't given");
+            throw std::runtime_error("VAR: variable name not given");
         }
+
         if (variables.find(varName) != variables.end()) {
-            throw std::runtime_error("CREATE VAR: variable '" + varName + "' already defined");
+            throw std::runtime_error("VAR: variable '" + varName + "' already defined");
         }
-        variables[varName] = 0;
+
+        int value = 0;
+
+        if (isdigit(valueStr[0]) || (valueStr.size() > 1 && valueStr[0] == '-' && isdigit(valueStr[1]))) {
+            try {
+                value = std::stoi(valueStr);
+            } catch (...) {
+                throw std::runtime_error("VAR: invalid number: " + valueStr);
+            }
+        } else {
+            auto it = variables.find(valueStr);
+            if (it == variables.end()) {
+                throw std::runtime_error("VAR: variable '" + valueStr + "' not defined");
+            }
+            value = it->second;
+        }
+
+        variables[varName] = value;
     }
+
     else if (trimmed.substr(0, 5) == "CALC(") {
+        if (!conditionMet) return;
+
         std::string body = trim(trimmed.substr(5, trimmed.size() - 6));
 
         size_t assignPos = body.find('=');
         if (assignPos != std::string::npos) {
-            // Режим присваивания: VAR=1+1
             std::string varName = trim(body.substr(0, assignPos));
             std::string expr = trim(body.substr(assignPos + 1));
 
@@ -96,11 +139,62 @@ void Interpreter::executeLine(const std::string& line) {
             variables[varName] = result;
         }
         else {
-            // Режим только вычисления: 1+1
             int result = evaluateExpression(body);
             std::cout << result << std::endl;
         }
     }
+
+    else if (trimmed.substr(0, 3) == "IF ") {
+        size_t thenPos = trimmed.find(" THEN");
+        if (thenPos == std::string::npos) {
+            throw std::runtime_error("IF: missing 'THEN'");
+        }
+
+        std::string condition = trim(trimmed.substr(3, thenPos - 3));
+        std::istringstream iss(condition);
+        std::string var1, op, var2;
+
+        if (!(iss >> var1 >> op >> var2)) {
+            throw std::runtime_error("IF: incorrect condition");
+        }
+
+        int val1 = 0, val2 = 0;
+
+        if (variables.find(var1) != variables.end()) {
+            val1 = variables[var1];
+        } else if (std::isdigit(var1[0]) || (var1.size() > 1 && var1[0] == '-' && std::isdigit(var1[1]))) {
+            val1 = std::stoi(var1);
+        } else {
+            throw std::runtime_error("IF: variable '" + var1 + "' not defined");
+        }
+
+        if (variables.find(var2) != variables.end()) {
+            val2 = variables[var2];
+        } else if (std::isdigit(var2[0]) || (var2.size() > 1 && var2[0] == '-' && std::isdigit(var2[1]))) {
+            val2 = std::stoi(var2);
+        } else {
+            throw std::runtime_error("IF: variable '" + var2 + "' not defined");
+        }
+
+        conditionMet = evaluateCondition(val1, val2, op);
+        inIfBlock = true;
+        executeElse = false;
+    }
+
+    else if (trimmed == "ELSE") {
+        if (!inIfBlock) {
+            throw std::runtime_error("ELSE: no matching IF");
+        }
+        conditionMet = !conditionMet;
+        executeElse = true;
+    }
+
+    else if (trimmed == "ENDIF") {
+        inIfBlock = false;
+        conditionMet = true;
+        executeElse = false;
+    }
+
     else {
         throw std::runtime_error("Unknown method or command: " + trimmed);
     }
@@ -116,6 +210,8 @@ void Interpreter::run(const std::string& filename) {
 
     variables.clear();
     inProgram = false;
+    inIfBlock = false;
+    conditionMet = true;
 
     std::string line;
     while (std::getline(file, line)) {

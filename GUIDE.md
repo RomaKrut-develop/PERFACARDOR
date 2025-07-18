@@ -68,11 +68,17 @@ Enter option:
 
 2. *END* - Конец программы
 
-3. *CREATE VAR* - Объявление переменной
+3. *VAR* - Объявление переменной
 
-4. *SHOW()* - Отображение информации на экране
+4. *IF* - Условный оператор ЕСЛИ
 
-5. *CALC()* - Вычислительная функция
+5. *ELSE* - Условный оператор ИНАЧЕ
+
+6. *ENDIF* - Маркировачный оператор конца условий. Необязателен
+
+7. *SHOW()* - Отображение информации на экране
+
+8. *CALC()* - Вычислительная функция
 
 Каждый отдельный тег мы разберем по мере убывания.
 
@@ -96,38 +102,42 @@ START
 END
 ```
 
+**Условные конструкции**:
+
+Чтобы обозначить рамки для условий, используются теги `IF` и `ELSE`. Что бы передать параметры условия, после `IF`, прописываются аргументы для успешного выполнения условия, обязательно ставим синтаксическую связку `THEN` дабы показать, какие команды будут происходить. `ELSE` будет работать в том случае, если результаты условия не были удволетворены.
+
+```PERFACARDOR
+START
+    VAR A = 42 <-- Объявление переменной
+    SHOW(A) <-- Выводим содержание переменной
+    IF A < 10 THEN <-- Объявляем условие, задаем аргументы для выполнения, ЕСЛИ условие ввыполняется, ТОГДА
+        SHOW('End') <-- Показываем 'End'
+    ELSE <-- В ином случае
+        SHOW('Keep') <-- Показываем 'Keep'
+    ENDIF <-- Можно обозначить, что условие закончилось, для удобства компилятора 
+END
+```
+
 **Определение переменных** происходит так:
 
 ```PERFACARDOR
 START
     SHOW('Shower') <-- Отображение навзания исполняемой программы
-    CREATE VAR test <-- 'test' имя переменной 
+    VAR test = 10 <-- 'test' имя переменной 
 END
 ```
 
-Стоит отметить, значение для переменной мы не можем задать сразу.
+Мы можем передать в переменную ТОЛЬКО числовое значение
 
 **Вычислительная функция CALC()**:
 
 Готовый калькулятор. Поддерживает операторы сложения, деления, вычитания, умножения.
 
+После вычисления, выводит результат на экран.
+
 В параметры CALC(), можно передавать любые вычислительные выражения;
 
 Например: `CALC(42+42)`.
-
-**Передача переменной в CALC()**:
-
-Можно передавать **переменные прямо в функцию**:
-
-```PERFACARDOR
-START
-    SHOW('Shower') <-- Отображение навзания исполняемой программы
-    CREATE VAR test <-- 'test' имя переменной 
-    CALC(test=9*9) <-- Задаем переменной 'test', вычислительное выражение
-END
-```
-
-Помимо числовых выражений, можно также передавать строки.
 
 **Передача переменной в SHOW()**:
 
@@ -136,20 +146,8 @@ END
 ```PERFACARDOR
 START
     SHOW('Shower') <-- Отображение навзания исполняемой программы
-    CREATE VAR test <-- 'test' имя переменной 
-    CALC(test=9*9) <-- Задаем переменной 'test', вычислительное выражение
+    VAR test = 90 <-- 'test' имя переменной 
     SHOW(test) <-- Передаем переменную и выводим на экран
-END
-```
-
-Таким образом, собирается простая, алгоритмическая программа которое вычисляет выражение.
-
-Хотя ее можно реализовать и **без передачи переменной** в **функцию**:
-
-```PERFACARDOR
-START
-    SHOW('Shower') <-- Отображение навзания исполняемой программы
-    CALC(1+1) <-- Автоматически выполняет и выводит операцию
 END
 ```
 
@@ -211,17 +209,40 @@ Here's what each option does:
 - **Help** - opens the help menu
 - **Exit** - quits the program
 
+To run program, enter `1` in main menu.
+
+Note, `tray` folder is empty for first start. save .txt program to this folder. 
+
+Enter name of your program and press ENTER
+
+But without syntax's knownledge, no ways to write programs
+
 ### Syntax
 
 **All available syntax tags:**
+1. *START* - Program start
 
-1. `START` - Start of the program
-2. `END` - End of the program
-3. `CREATE VAR` - Variable declaration
-4. `SHOW()` - Display information
-5. `CALC()` - Computational function
+2. *END* - Program end
 
-**Basic program structure:**
+3. *VAR* - Variable declaration
+
+4. *IF* - IF conditional operator
+
+5. *ELSE* - ELSE conditional operator
+
+6. *ENDIF* - Marker for the end of conditions. Optional
+
+7. *SHOW()* - Display information on screen
+
+8. *CALC()* - Calculation function
+
+We'll examine each tag in descending order.
+
+**Basics:**
+
+To define program boundaries in **PERFACARDOR**, use the `START` and `END` tags, which contain the main program logic.
+
+Every PERFACARDOR program must begin with the keyword START and end with END.
 
 ```PERFACARDOR
 START
@@ -229,70 +250,69 @@ START
 END
 ```
 
-**Variables are defined as follows**:
+Knowing this, let's write our **first program**:
 
 ```PERFACARDOR
 START
-    SHOW('Shower') <-- Displays the program name
-    CREATE VAR test <-- 'test' is the variable name
+    SHOW('Hello, PERFACARDOR!')
 END
 ```
 
-Note that we cannot assign a value to the variable during declaration.
+**Conditional constructs**:
 
-**The CALC() function**:
-
-A built-in calculator function that supports addition, division, subtraction, and multiplication.
-
-You can pass any arithmetic expression to CALC():
-
-Example: CALC(42+42)
-
-**Passing Variables to CALC()**:
+To define condition boundaries, use the `IF` and `ELSE` tags. To pass condition parameters, arguments for successful execution are written after `IF`, followed by the syntactic link `THEN` to indicate which commands will execute. `ELSE` will work if the condition results are not satisfied.
 
 ```PERFACARDOR
 START
-    SHOW('Shower') <-- Displays the program name
-    CREATE VAR test <-- 'test' is the variable name
-    CALC(test=9*9) <-- Assigns the arithmetic expression to variable 'test'
+    VAR A = 42 <-- Variable declaration
+    SHOW(A) <-- Display variable content
+    IF A < 10 THEN <-- Declare condition, set arguments for execution, IF condition is met, THEN
+        SHOW('End') <-- Show 'End'
+    ELSE <-- Otherwise
+        SHOW('Keep') <-- Show 'Keep'
+    ENDIF <-- Can mark the end of the condition for compiler convenience
 END
 ```
 
-Besides numerical expressions, you can also pass strings.
-
-**Passing Variables to SHOW()**:
-
-Variables can be passed directly to the SHOW() function:
+**Variable definition** works like this:
 
 ```PERFACARDOR
 START
-    SHOW('Shower') <-- Displays the program name
-    CREATE VAR test <-- 'test' is the variable name
-    CALC(test=9*9) <-- Assigns the arithmetic expression to variable 'test'
-    SHOW(test) <-- Passes the variable and displays it
+    SHOW('Shower') <-- Display program name
+    VAR test = 10 <-- 'test' variable name
 END
 ```
 
-This way, we build a simple algorithmic program that evaluates expressions.
+We can **only** assign numerical values to variables.
 
-Alternatively, you can implement it **without passing variables** to functions:
+Calculation **function CALC()**:
+
+A ready-made calculator. Supports addition, division, subtraction, and multiplication operators.
+
+After calculation, displays the result on screen.
+
+Any computational expressions can be passed to CALC() parameters:
+
+For example: `CALC(42+42)`.
+
+Passing variables to SHOW():
 
 ```PERFACARDOR
 START
-    SHOW('Shower') <-- Displays the program name
-    CALC(1+1) <-- Automatically evaluates and displays the operation
+    SHOW('Shower') <-- Display program name
+    VAR test = 90 <-- 'test' variable name
+    SHOW(test) <-- Pass the variable and display it
 END
 ```
 
-**Loading and Running Programs**:
+**Launch and loading**:
 
-To load, place your txt-program in `tray` folder.
+To load a program, place the ready txt-file in the `tray` folder.
 
-To run, open `interpreter.exe` and input `Load and run` option.
-After that, enter program name to run, example: `test.txt`.
+To run, open `interpreter.exe` and select `Load and run`.
 
-Press ENTER pn keyboard.
+Then enter your program name you want to run, for example `test.txt`.
 
-Your 'digital punch card' will be loaded into the interpreter from the `tray`, and the execution result will be displayed in the terminal.
+Press ENTER on your keyboard.
 
-## Creator - Roman Braginetz
+Your 'digital punch card' will be loaded into the interpreter from tray, and the execution result will be displayed in the terminal.
