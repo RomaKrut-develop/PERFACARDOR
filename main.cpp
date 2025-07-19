@@ -30,7 +30,7 @@ int main() { // Основная функция меню (Меню в роле �
         std::wcout << L"Enter option: ";
         std::cin >> choice;
 
-        if (std::cin.fail()) {
+        if (std::cin.fail()) { // Ошибка меню при неверном вводе выбора
             clearInput();
             std::wcout << L"Wrong input. Choice from 1 to 3.\n";
             continue;
