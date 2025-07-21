@@ -1,0 +1,2 @@
+Place your programs in this folder.
+You can delete this file.

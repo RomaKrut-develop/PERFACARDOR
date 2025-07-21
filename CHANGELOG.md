@@ -34,7 +34,6 @@ All notable changes to this project will be documented in this file.
 - Old syntax `CALC(...) = VAR` in favor of `CALC(VAR=...)`
 
 ## [0.1.1] - 2025-07-18
-
 ### Added
 - `IF/ELSE` constructions
 - Comparison operators: `==`, `!=`, `<=`, `=>`, `<`, `>`
@@ -47,6 +46,11 @@ All notable changes to this project will be documented in this file.
 
 ### Removed
 - Old syntax `CREATE VAR TEST` in favor of `VAR TEST = 10`
+
+## [0.1.1] - 2025-07-21
+### Added
+- **Splitting of a project. In basic folder, old terminal interpreter**
+- **GUI IDE, to write, load and run programs instantly**
 
 ## RU
 ## [0.1.0] - 2025-07-17
@@ -80,8 +84,7 @@ All notable changes to this project will be documented in this file.
 - Старый синтаксис `CALC(...) = VAR` взамену `CALC(VAR=...)`
 
 ## [0.1.1] - 2025-07-18
-
-### Добавленр
+### Добавлено
 - Условные конструкции `IF/ELSE`
 - Операторы сравнения: `==`, `!=`, `<=`, `=>`, `<`, `>`
 
@@ -93,3 +96,8 @@ All notable changes to this project will be documented in this file.
 
 ### Удалено
 - Старый синтаксис `CREATE VAR TEST` был изменён на `VAR TEST = 10`
+
+## [0.1.1] - 2025-07-21
+### Добавлено
+- **Разделение проекта. В папке basic, старый консольный интерпретатор**
+- **Добавлено IDE с графическим интерфейсом**
